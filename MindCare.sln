@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindCare.Web", "MindCare.Web\MindCare.Web.csproj", "{0447F47C-F0E9-4E51-AF2E-D77DA863F114}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindCare.BLL", "MindCare.BLL\MindCare.BLL.csproj", "{61C9FBBB-C152-4B22-9CA5-B68160D36452}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindCare.DAL", "MindCare.DAL\MindCare.DAL.csproj", "{97E85FD1-F4CC-418A-883F-6A60BF9FE076}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0447F47C-F0E9-4E51-AF2E-D77DA863F114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0447F47C-F0E9-4E51-AF2E-D77DA863F114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0447F47C-F0E9-4E51-AF2E-D77DA863F114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0447F47C-F0E9-4E51-AF2E-D77DA863F114}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61C9FBBB-C152-4B22-9CA5-B68160D36452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61C9FBBB-C152-4B22-9CA5-B68160D36452}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61C9FBBB-C152-4B22-9CA5-B68160D36452}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61C9FBBB-C152-4B22-9CA5-B68160D36452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97E85FD1-F4CC-418A-883F-6A60BF9FE076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97E85FD1-F4CC-418A-883F-6A60BF9FE076}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97E85FD1-F4CC-418A-883F-6A60BF9FE076}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97E85FD1-F4CC-418A-883F-6A60BF9FE076}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\styles.css" />
+    <None Include="wwwroot\images\1.jpeg" />
+    <None Include="wwwroot\images\2.png" />
+    <None Include="wwwroot\images\22.png" />
+    <None Include="wwwroot\images\3.jpeg" />
+    <None Include="wwwroot\images\4.webp" />
+    <None Include="wwwroot\images\ava.png" />
+    <None Include="wwwroot\images\ava2.png" />
+    <None Include="wwwroot\images\avam.png" />
+    <None Include="wwwroot\images\cbt.jpg" />
+    <None Include="wwwroot\images\ch.jpg" />
+    <None Include="wwwroot\images\clinic.jpeg" />
+    <None Include="wwwroot\images\coach.jpg" />
+    <None Include="wwwroot\images\fam.webp" />
+    <None Include="wwwroot\images\gr.jpeg" />
+    <None Include="wwwroot\images\growth.jpeg" />
+    <None Include="wwwroot\images\image-removebg-preview.png" />
+    <None Include="wwwroot\images\ind.jpeg" />
+    <None Include="wwwroot\images\indi.png" />
+    <None Include="wwwroot\images\online.png" />
+    <None Include="wwwroot\images\pexels-photo-3783585.webp" />
+    <None Include="wwwroot\images\psy1.png" />
+    <None Include="wwwroot\images\psy2.png" />
+    <None Include="wwwroot\images\psy3.png" />
+    <None Include="wwwroot\images\traume.webp" />
+    <None Include="wwwroot\js\scripts.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MindCare.BLL\MindCare.BLL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Admin\" />
+  </ItemGroup>
+
+</Project>
