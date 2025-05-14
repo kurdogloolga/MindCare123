@@ -8,25 +8,22 @@ namespace MindCare.DAL.EntityTypeConfiguration
     {
         public void Configure(EntityTypeBuilder<Review> builder)
         {
-            builder.HasKey(r => r.Id);
+            builder.HasKey(review => review.Id);
 
-            builder.Property(r => r.Rating)
+            builder.Property(review => review.Rating)
                    .IsRequired();
 
-            builder.Property(r => r.Comment)
-                   .HasMaxLength(1000);
+            builder.Property(review => review.Comment)
+                   .HasMaxLength(500);
 
-            builder.Property(r => r.CreatedAt)
-                   .IsRequired();
-
-            builder.HasOne(r => r.User)
+            builder.HasOne(review => review.User)
                    .WithMany(u => u.Reviews)
-                   .HasForeignKey(r => r.UserId)
+                   .HasForeignKey(review => review.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(r => r.Specialist)
+            builder.HasOne(review => review.Specialist)
                    .WithMany(s => s.Reviews)         
-                   .HasForeignKey(r => r.SpecialistId)
+                   .HasForeignKey(review => review.SpecialistId)
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }

@@ -1,8 +1,6 @@
-﻿namespace MindCare.DAL.Entities.Enums
+﻿namespace MindCare.DAL.Entities.Enums;
+public enum Gender
 {
-    public enum Gender
-    {
-        Male = 0,
-        Female = 1
-    }
+    Male = 0,
+    Female = 1
 }

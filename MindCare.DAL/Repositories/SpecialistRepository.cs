@@ -1,51 +1,40 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MindCare.DAL.Abstraction;
 using MindCare.DAL.Context;
 using MindCare.DAL.Entities;
-using MindCare.DAL.Interfaces;
 
-namespace MindCare.DAL.Repositories
+namespace MindCare.DAL.Repositories;
+public class SpecialistRepository : IRepository<Specialist>
 {
-    public class SpecialistRepository : ISpecialistRepository
+    private readonly MindCareDbContext _dbContext;
+
+    public SpecialistRepository(MindCareDbContext dbContext)
     {
-        private readonly MindCareDbContext _context;
+        _dbContext = dbContext;
+    }
 
-        public SpecialistRepository(MindCareDbContext context)
-        {
-            _context = context;
-        }
+    public async Task AddAsync(Specialist entity)
+    {
+        await _dbContext.Specialists.AddAsync(entity);
+    }
 
-        public async Task<Specialist> GetByIdAsync(Guid id)
-        {
-            return await _context.Specialists.FindAsync(id);
-        }
+    public IQueryable<Specialist> GetAll()
+    {
+        return _dbContext.Specialists.AsNoTracking();
+    }
 
-        public async Task<IEnumerable<Specialist>> GetAllAsync()
-        {
-            return await _context.Specialists.ToListAsync();
-        }
+    public async Task<Specialist?> GetByIdAsync(Guid id)
+    {
+        return await _dbContext.Specialists.FindAsync(id);
+    }
 
-        public async Task AddAsync(Specialist specialist)
-        {
-            await _context.Specialists.AddAsync(specialist);
-        }
+    public void Remove(Specialist entity)
+    {
+        _dbContext.Specialists.Remove(entity);
+    }
 
-        public void Update(Specialist specialist)
-        {
-            _context.Specialists.Update(specialist);
-        }
-
-        public async Task DeleteAsync(Guid id)
-        {
-            var specialist = await GetByIdAsync(id);
-            if (specialist != null)
-            {
-                _context.Specialists.Remove(specialist);
-            }
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
+    public void Update(Specialist entity)
+    {
+        _dbContext.Specialists.Update(entity);
     }
 }

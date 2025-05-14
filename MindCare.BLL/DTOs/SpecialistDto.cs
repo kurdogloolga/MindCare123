@@ -1,13 +1,11 @@
-﻿namespace MindCare.BLL.DTOs
+﻿namespace MindCare.BLL.DTOs;
+public class SpecialistDto
 {
-    public class SpecialistDto
-    {
-        public Guid Id { get; set; }
-        public string FullName { get; set; }
-        public string Description { get; set; }
-        public string Specialization { get; set; }
-        public string ImageUrl { get; set; }
-        public decimal PricePerSession { get; set; }
-        public float Rating { get; set; }
-    }
+    public Guid Id { get; set; }
+    public string FullName { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string Specialization { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
+    public decimal PricePerSession { get; set; }
+    public decimal Rating { get; set; }
 }

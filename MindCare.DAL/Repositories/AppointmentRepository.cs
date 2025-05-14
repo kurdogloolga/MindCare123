@@ -1,57 +1,40 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MindCare.DAL.Abstraction;
 using MindCare.DAL.Context;
 using MindCare.DAL.Entities;
-using MindCare.DAL.Interfaces;
 
-namespace MindCare.DAL.Repositories
+namespace MindCare.DAL.Repositories;
+public class AppointmentRepository : IRepository<Appointment>
 {
-    public class AppointmentRepository : IAppointmentRepository
+    private readonly MindCareDbContext _dbContext;
+
+    public AppointmentRepository(MindCareDbContext dbContext)
     {
-        private readonly MindCareDbContext _context;
+        _dbContext = dbContext;
+    }
 
-        public AppointmentRepository(MindCareDbContext context)
-        {
-            _context = context;
-        }
+    public async Task AddAsync(Appointment entity)
+    {
+        await _dbContext.Appointments.AddAsync(entity);
+    }
 
-        public async Task<Appointment> GetByIdAsync(Guid id)
-        {
-            return await _context.Appointments
-                .Include(a => a.User)
-                .Include(a => a.Specialist)
-                .FirstOrDefaultAsync(a => a.Id == id);
-        }
+    public IQueryable<Appointment> GetAll()
+    {
+        return _dbContext.Appointments.AsNoTracking();
+    }
 
-        public async Task<IEnumerable<Appointment>> GetAllAsync()
-        {
-            return await _context.Appointments
-                .Include(a => a.User)
-                .Include(a => a.Specialist)
-                .ToListAsync();
-        }
+    public async Task<Appointment?> GetByIdAsync(Guid id)
+    {
+        return await _dbContext.Appointments.FindAsync(id);
+    }
 
-        public async Task AddAsync(Appointment appointment)
-        {
-            await _context.Appointments.AddAsync(appointment);
-        }
+    public void Remove(Appointment entity)
+    {
+        _dbContext.Appointments.Remove(entity);
+    }
 
-        public void Update(Appointment appointment)
-        {
-            _context.Appointments.Update(appointment);
-        }
-
-        public async Task DeleteAsync(Guid id)
-        {
-            var appointment = await GetByIdAsync(id);
-            if (appointment != null)
-            {
-                _context.Appointments.Remove(appointment);
-            }
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
+    public void Update(Appointment entity)
+    {
+        _dbContext.Appointments.Update(entity);
     }
 }

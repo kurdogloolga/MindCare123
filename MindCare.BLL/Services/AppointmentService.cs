@@ -1,57 +1,70 @@
-﻿using AutoMapper;
+﻿using Microsoft.EntityFrameworkCore;
+using MindCare.BLL.Abstraction;
+using MindCare.DAL.Abstraction;
+using AutoMapper;
 using MindCare.BLL.DTOs;
-using MindCare.BLL.Interfaces;
 using MindCare.DAL.Entities;
-using MindCare.DAL.Interfaces;
 
-namespace MindCare.BLL.Services
+namespace MindCare.BLL.Services;
+public class AppointmentService : IAppointmentService
 {
-    public class AppointmentService : IAppointmentService
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+
+    public AppointmentService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        private readonly IAppointmentRepository _appointmentRepository;
-        private readonly IMapper _mapper;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
 
-        public AppointmentService(IAppointmentRepository appointmentRepository, IMapper mapper)
-        {
-            _appointmentRepository = appointmentRepository;
-            _mapper = mapper;
-        }
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync()
+    {
+        var appointments = await _unitOfWork.Appointments.GetAll()
+            .ToListAsync();
+        return _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
+    }
 
-        public async Task<AppointmentDto> GetByIdAsync(Guid id)
-        {
-            var appointment = await _appointmentRepository.GetByIdAsync(id);
-            return _mapper.Map<AppointmentDto>(appointment);
-        }
+    public async Task<AppointmentDto> GetAppointmentByIdAsync(Guid id)
+    {
+        var appointment = await _unitOfWork.Appointments.GetByIdAsync(id);
+        return _mapper.Map<AppointmentDto>(appointment);
+    }
 
-        public async Task<IEnumerable<AppointmentDto>> GetAllAsync()
-        {
-            var appointments = await _appointmentRepository.GetAllAsync();
-            return appointments.Select(a => _mapper.Map<AppointmentDto>(a));
-        }
+    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByUserAsync(Guid userId)
+    {
+        var appointments = await _unitOfWork.Appointments.GetAll()
+            .Where(a => a.UserId == userId)
+            .ToListAsync();
+        return _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
+    }
 
-        public async Task CreateAsync(AppointmentDto appointmentDto)
-        {
-            var appointment = _mapper.Map<Appointment>(appointmentDto);
+    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsBySpecialistAsync(Guid specialistId)
+    {
+        var appointments = await _unitOfWork.Appointments.GetAll()
+            .Where(a => a.SpecialistId == specialistId)
+            .ToListAsync();
+        return _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
+    }
 
-            await _appointmentRepository.AddAsync(appointment);
-            await _appointmentRepository.SaveChangesAsync();
-        }
+    public async Task<Guid> BookAppointmentAsync(AppointmentDto appointmentDto)
+    {
+        var appointment = _mapper.Map<Appointment>(appointmentDto);
+        await _unitOfWork.Appointments.AddAsync(appointment);
+        await _unitOfWork.CommitAsync();
+        return appointment.Id;
+    }
 
-        public async Task UpdateAsync(AppointmentDto appointmentDto)
-        {
-            var existing = await _appointmentRepository.GetByIdAsync(appointmentDto.Id);
-            if (existing == null)
-                throw new Exception("Appointment not found.");
+    public async Task UpdateAppointmentAsync(AppointmentDto appointmentDto)
+    {
+        var appointment = _mapper.Map<Appointment>(appointmentDto);
+        _unitOfWork.Appointments.Update(appointment);
+        await _unitOfWork.CommitAsync();
+    }
 
-            _mapper.Map(appointmentDto, existing);
-            _appointmentRepository.Update(existing);
-            await _appointmentRepository.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(Guid id)
-        {
-            await _appointmentRepository.DeleteAsync(id);
-            await _appointmentRepository.SaveChangesAsync();
-        }
+    public async Task CancelAppointmentAsync(Guid id)
+    {
+        var appt = await _unitOfWork.Appointments.GetByIdAsync(id);
+        _unitOfWork.Appointments.Remove(appt);
+        await _unitOfWork.CommitAsync();
     }
 }

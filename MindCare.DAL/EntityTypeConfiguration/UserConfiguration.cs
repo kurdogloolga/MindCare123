@@ -8,38 +8,22 @@ namespace MindCare.DAL.EntityTypeConfiguration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(u => u.Id);
 
-            builder.Property(u => u.FirstName)
+            builder.Property(user => user.FirstName)
                    .IsRequired()
                    .HasMaxLength(100);
 
-            builder.Property(u => u.LastName)
+            builder.Property(user => user.LastName)
                    .IsRequired()
                    .HasMaxLength(100);
 
-            builder.Property(u => u.Phone)
-                   .HasMaxLength(20);
+            builder.Property(user => user.Gender)
+                .HasConversion<string>()
+                .HasMaxLength(20);
 
-            builder.Property(u => u.Birthday)
-                   .IsRequired();
-
-            builder.Property(u => u.Gender)
-                   .IsRequired();
-
-            builder.Property(u => u.Role)
-                   .IsRequired();
-
-            builder.Property(u => u.Email)
-                   .IsRequired()
-                   .HasMaxLength(200);
-
-            builder.HasIndex(u => u.Email)
-                   .IsUnique();
-
-            builder.Property(u => u.PasswordHash)
-                   .IsRequired()
-                   .HasMaxLength(500);
+            builder.Property(user => user.Role)
+                .HasConversion<string>()
+                .HasMaxLength(20);
         }
     }
 }

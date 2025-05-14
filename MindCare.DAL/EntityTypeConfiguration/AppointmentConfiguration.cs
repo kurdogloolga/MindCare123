@@ -1,36 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using MindCare.DAL.Entities;
+using MindCare.DAL.Entities.Enums;
 
-namespace MindCare.DAL.EntityTypeConfiguration
+namespace MindCare.DAL.EntityTypeConfiguration;
+public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
 {
-    public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
+    public void Configure(EntityTypeBuilder<Appointment> builder)
     {
-        public void Configure(EntityTypeBuilder<Appointment> builder)
-        {
-            builder.HasKey(a => a.Id);
+        builder.HasKey(appointment => appointment.Id);
 
-            builder.Property(a => a.StartTime)
-                   .IsRequired();
+        builder.Property(appointment => appointment.Mode)
+            .HasConversion<string>()
+            .HasMaxLength(20)
+            .HasDefaultValue(Mode.Offline);
 
-            builder.Property(a => a.EndTime)
-                   .IsRequired();
+        builder.Property(appointment => appointment.Reason)
+            .HasMaxLength(500);
 
-            builder.Property(a => a.Comment)
-                   .HasMaxLength(500);
+        builder.HasOne(appointment => appointment.User)
+            .WithMany(user => user.Appointments) 
+            .HasForeignKey(appointment => appointment.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(a => a.Status)
-                   .IsRequired();
-
-            builder.HasOne(a => a.User)
-                   .WithMany(u => u.Appointments) 
-                   .HasForeignKey(a => a.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(a => a.Specialist)
-                   .WithMany(s => s.Appointments) 
-                   .HasForeignKey(a => a.SpecialistId)
-                   .OnDelete(DeleteBehavior.Restrict);
-        }
+        builder.HasOne(appointment => appointment.Specialist)
+            .WithMany(specialist => specialist.Appointments) 
+            .HasForeignKey(appointment => appointment.SpecialistId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

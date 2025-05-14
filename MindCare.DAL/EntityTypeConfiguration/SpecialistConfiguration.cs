@@ -8,23 +8,23 @@ namespace MindCare.DAL.EntityTypeConfiguration
     {
         public void Configure(EntityTypeBuilder<Specialist> builder)
         {
-            builder.HasKey(s => s.Id);
+            builder.HasKey(specialist => specialist.Id);
 
-            builder.Property(s => s.FullName)
+            builder.Property(specialist => specialist.FullName)
                    .IsRequired()
                    .HasMaxLength(200);
 
-            builder.Property(s => s.Description)
+            builder.Property(specialist => specialist.Description)
                    .HasMaxLength(1000);
 
-            builder.Property(s => s.Specialization)
+            builder.Property(specialist => specialist.Specialization)
                    .IsRequired()
                    .HasMaxLength(200);
 
-            builder.Property(s => s.PricePerSession)
+            builder.Property(specialist => specialist.PricePerSession)
                    .HasColumnType("decimal(18,2)");
 
-            builder.Property(s => s.Rating)
+            builder.Property(specialist => specialist.Rating)
                    .HasPrecision(3, 2);
         }
     }

@@ -1,8 +1,6 @@
-﻿namespace MindCare.DAL.Entities.Enums
+﻿namespace MindCare.DAL.Entities.Enums;
+public enum UserRole
 {
-    public enum UserRole
-    {
-        Client = 0,
-        Admin = 1
-    }
+    Client = 0,
+    Admin = 1
 }
