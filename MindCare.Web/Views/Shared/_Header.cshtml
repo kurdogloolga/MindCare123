@@ -1,28 +1,58 @@
-﻿    <nav class="navbar navbar-expand-lg text-white custom-bg">
-        <div class="container px-5">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">MindCare</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-white">
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" asp-controller="Specialists" asp-action="Specialists">Specialists</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="FAQ">FAQ</a></li>
-                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a></li>
+﻿@using Microsoft.AspNetCore.Identity
+@using MindCare.DAL.Entities
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<nav class="navbar navbar-expand-lg text-white custom-bg">
+    <div class="container px-5">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">MindCare</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-white">
+                <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Specialists" asp-action="Index">Specialists</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="FAQ">FAQ</a></li>
+
+                @if (!SignInManager.IsSignedIn(User))
+                {
+                    <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a></li>
+                }
+                else
+                {
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownBlog" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Blog
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            @User.Identity?.Name
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownBlog">
-                            <li><a class="dropdown-item" asp-controller="Blog" asp-action="Home">Blog Home</a></li>
-                            <li><a class="dropdown-item" asp-controller="Blog" asp-action="Post">Blog Post</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="px-3 py-1">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-link text-dark p-0">Log out</button>
+                                </form>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index">
+                                        Admin Panel
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </li>
-                </ul>
-            </div>
+                }
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>

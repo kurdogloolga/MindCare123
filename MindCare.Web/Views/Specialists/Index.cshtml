@@ -1,0 +1,72 @@
+﻿@model MindCare.Web.Models.SpecialistsViewModel
+
+@{
+    ViewData["Title"] = "Specialists";
+}
+
+<!-- Header -->
+<header class="custom-bg py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Our Sessions</h1>
+            <p class="lead fw-normal text-white-50 mb-0">With this shop homepage template</p>
+        </div>
+    </div>
+</header>
+
+<!-- Section -->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            @foreach (var specialist in Model.specialists)
+            {
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Specialist image -->
+                        <img class="card-img-top" src="@Url.Content(specialist.ImageUrl)" alt="Specialist photo" />
+
+                        <!-- Specialist details -->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <a class="text-decoration-none"
+                                   asp-controller="Specialists"
+                                   asp-action="Details"
+                                   asp-route-id="@specialist.Id">
+                                    <h5 class="fw-bolder">@specialist.FullName</h5>
+                                </a>
+                                <p>$@specialist.PricePerSession</p>
+                                <h6 class="fw-bolder">@specialist.Specialization</h6>
+                            </div>
+                        </div>
+
+                        <!-- Schedule button -->
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a class="btn btn-outline-dark mt-auto"
+                                       asp-controller="Appointment"
+                                       asp-action="Book"
+                                       asp-route-specialistId="@specialist.Id">
+                                        Schedule
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button type="button"
+                                            class="btn btn-outline-dark mt-auto"
+                                            onclick="{
+                                                alert('Пожалуйста, войдите в систему, чтобы записаться на сеанс.');
+                                                window.location='@Url.Action("Login", "Account", new { returnUrl = Url.Action("Book", "Appointment", new { id = specialist.Id }) })';
+                                            }">
+                                        Schedule
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

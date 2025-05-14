@@ -1,0 +1,50 @@
+﻿@model IEnumerable<MindCare.BLL.DTOs.SpecialistDto>
+
+@{
+    ViewData["Title"] = "Admin Panel — Specialists";
+}
+
+<div class="container mt-4">
+    <h1>Specialists Management</h1>
+
+    <p>
+        <a class="btn btn-primary" asp-controller="Dashboard" asp-action="Create">
+            Add New Specialist
+        </a>
+    </p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Specialization</th>
+                <th>Price</th>
+                <th>Rating</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.FullName</td>
+                    <td>@s.Specialization</td>
+                    <td>$@s.PricePerSession</td>
+                    <td>@s.Rating</td>
+                    <td>
+                        <form asp-controller="Dashboard"
+                              asp-action="Delete"
+                              asp-route-id="@s.Id"
+                              method="post"
+                              onsubmit="return confirm('Delete this specialist?');"
+                              style="display:inline">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

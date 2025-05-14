@@ -1,42 +1,60 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MindCare.BLL.Interfaces;
-using MindCare.BLL.Mapping;
-using MindCare.BLL.Services;
 using MindCare.DAL.Context;
-using MindCare.DAL.Interfaces;
+using MindCare.DAL.Entities;
+using MindCare.BLL.Mapping;
+using MindCare.BLL.Abstraction;
+using MindCare.BLL.Services;
+using MindCare.DAL.Abstraction;
 using MindCare.DAL.Repositories;
+using MindCare.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddDbContext<MindCareDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddScoped<ISpecialistService, SpecialistService>();
-builder.Services.AddScoped<ISpecialistRepository, SpecialistRepository>();
-
+builder.Services.AddDbContext<MindCareDbContext>(opt =>
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddIdentity<User, IdentityRole<Guid>>(opts =>
+{
+    opts.Password.RequireDigit = true;
+    opts.Password.RequiredLength = 6;
+    opts.Password.RequireUppercase = true;
+    opts.User.RequireUniqueEmail = true;
+})
+    .AddEntityFrameworkStores<MindCareDbContext>()
+    .AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(opts =>
+{
+    opts.LoginPath = "/Account/Login";
+    opts.AccessDeniedPath = "/Account/AccessDenied";
+});
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-var app = builder.Build();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+builder.Services.AddScoped<IRepository<Specialist>, SpecialistRepository>();
+builder.Services.AddScoped<IRepository<Review>, ReviewRepository>();
+builder.Services.AddScoped<IRepository<Appointment>, AppointmentRepository>();
+builder.Services.AddScoped<IRepository<Availability>, AvailabilityRepository>();
+
+builder.Services.AddScoped<ISpecialistService, SpecialistService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+
+
+var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<MindCareDbContext>();
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
     try
     {
-        DbInitializer.Initialize(context);
+        await DbInitializer.InitializeAsync(context, userManager, roleManager);
     }
     catch (Exception ex)
     {
@@ -45,18 +63,19 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
+if (!app.Environment.IsDevelopment())
+    app.UseExceptionHandler("/Home/Error");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication(); 
 app.UseAuthorization();
-
-app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
